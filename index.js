@@ -11,7 +11,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 const playlistUrl = process.env.PLAYLIST_URL;
 
 if(!playlistUrl) {
-    console.error("Please prove the playlist url.")
+    console.error("Please provide the playlist url.")
     exit(0);
 }
 

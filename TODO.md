@@ -4,4 +4,4 @@
 - Passer le projet en typescript (et rajouter les types)
 - Mettre des gestions d'erreurs (try catch...)
 - Mieux organiser le code, le commenter et rajouter des tests
-- Tout le contenu du readme a été supprimé à vérifier le code.
+- Supprimer le .env et le remettre (il était pas dans le gitignore)
