@@ -50,7 +50,7 @@ function generateMusicSection(tracks) {
 
 function readExistingREADME() {
     try {
-        return fs.readFileSync('Tritounet1/README.md', 'utf8');
+        return fs.readFileSync('../README.md', 'utf8');
     } catch (error) {
         console.error('Erreur lors de la lecture du README:', error);
         return '';
@@ -82,7 +82,7 @@ function updateREADME() {
     }
 
     try {
-        fs.writeFileSync('Tritounet1/README.md', readmeContent, 'utf8');
+        fs.writeFileSync('../README.md', readmeContent, 'utf8');
         console.log('✅ README mis à jour avec succès !');
         console.log(`📊 ${tracks.length} pistes ajoutées à la section musique`);
     } catch (error) {
