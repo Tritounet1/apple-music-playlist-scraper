@@ -38,8 +38,17 @@ async function downloadImage(url, filepath) {
 async function scrapeAppleMusicPlaylist(numberOfTracks = 5) {
   const browser = await puppeteer.launch({
     headless: true,
-    defaultViewport: null,
-    args: ['--start-maximized']
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process',
+      '--disable-gpu'
+    ]
   });
 
   try {
