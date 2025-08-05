@@ -39,7 +39,7 @@ function generateMusicSection(tracks) {
         musicSection += `| ${position} | ${artworkMarkdown} | ${titleLinkMarkdown} | ${artists} | ${album} |\n`;
     });
 
-    musicSection += `*Last updated: ${new Date().toLocaleDateString('en-EN', { 
+    musicSection += `\n\n---\n\n *Last updated: ${new Date().toLocaleDateString('en-EN', { 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric' 
