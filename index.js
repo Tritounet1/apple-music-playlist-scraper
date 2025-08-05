@@ -8,11 +8,10 @@ dotenv.config();
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-const githubAccount = process.env.GITHUB_ACCOUNT;
 const playlistUrl = process.env.PLAYLIST_URL;
 
 if(!playlistUrl) {
-    console.error("Please ")
+    console.error("Please prove the playlist url.")
     exit(0);
 }
 
@@ -62,7 +61,7 @@ async function scrapeAppleMusicPlaylist(numberOfTracks = 5) {
     
     await page.waitForSelector('[data-testid="track-list-item"]', { timeout: 10000 });
     
-    const imagesDir = `./${githubAccount}/artwork_images`;
+    const imagesDir = "./artwork_images";
     if (!fs.existsSync(imagesDir)) {
       fs.mkdirSync(imagesDir, { recursive: true });
     }
