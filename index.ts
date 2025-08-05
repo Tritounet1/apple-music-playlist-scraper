@@ -15,6 +15,12 @@ if(!playlistUrl) {
     process.exit(0);
 }
 
+let numberOfTracks: number | null  = process.env.NUMBER_OF_TRACKS ?  parseInt(process.env.NUMBER_OF_TRACKS) : null;
+
+if(!numberOfTracks) {
+  numberOfTracks = 5;
+}
+
 interface Track {
   position: number;
   title: string;
@@ -167,4 +173,4 @@ async function scrapeAppleMusicPlaylist(numberOfTracks: number = 5): Promise<voi
   }
 }
 
-scrapeAppleMusicPlaylist(5);
+scrapeAppleMusicPlaylist(numberOfTracks);
