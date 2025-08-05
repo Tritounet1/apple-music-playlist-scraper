@@ -1,0 +1,17 @@
+{
+  "name": "apple-music-playlist-scraper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "dotenv": "^17.2.1",
+    "puppeteer": "^24.15.0"
+  }
+}
