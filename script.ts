@@ -1,7 +1,20 @@
 import fs from 'fs';
 import path from 'path';
 
-function loadPlaylistData() {
+interface Track {
+  position: number;
+  title: string;
+  titleLink: string;
+  artists: string;
+  artistLinks: string[];
+  album: string;
+  albumLink: string;
+  duration: string;
+  artworkSrc: string | null;
+  isExplicit: boolean;
+}
+
+function loadPlaylistData(): Track[] {
     try {
         const data = fs.readFileSync('playlist_tracks.json', 'utf8');
         return JSON.parse(data);
@@ -11,7 +24,7 @@ function loadPlaylistData() {
     }
 }
 
-function generateMusicSection(tracks) {
+function generateMusicSection(tracks: Track[]): string {
     if (!tracks || tracks.length === 0) {
         return '';
     }
@@ -22,7 +35,7 @@ function generateMusicSection(tracks) {
     musicSection += '| # | Artwork | Track | Artist | Album |\n';
     musicSection += '|---|---------|-------|--------|-------|\n';
 
-    tracks.forEach((track) => {
+    tracks.forEach((track: Track) => {
         const position = track.position;
         const title = track.title;
         const artists = track.artists;
@@ -34,7 +47,7 @@ function generateMusicSection(tracks) {
         const titleWithBadge = isExplicit ? `${title} 🅴` : title;
         const titleLinkMarkdown = `[${titleWithBadge}](${titleLink})`;
 
-        const artworkMarkdown = `<img src="${artworkSrc}" width="50" height="50" alt="${title} artwork">`;
+        const artworkMarkdown = `<img src="${artworkSrc || ''}" width="50" height="50" alt="${title} artwork">`;
 
         musicSection += `| ${position} | ${artworkMarkdown} | ${titleLinkMarkdown} | ${artists} | ${album} |\n`;
     });
@@ -48,7 +61,7 @@ function generateMusicSection(tracks) {
     return musicSection;
 }
 
-function readExistingREADME() {
+function readExistingREADME(): string {
     try {
         return fs.readFileSync('../README.md', 'utf8');
     } catch (error) {
@@ -57,7 +70,7 @@ function readExistingREADME() {
     }
 }
 
-function updateREADME() {
+function updateREADME(): void {
     const tracks = loadPlaylistData();
     const musicSection = generateMusicSection(tracks);
     

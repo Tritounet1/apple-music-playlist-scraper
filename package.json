@@ -1,10 +1,15 @@
 {
   "name": "apple-music-playlist-scraper",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "node index.js"
+    "start": "tsc && node dist/index.js",
+    "dev": "tsx index.ts",
+    "build": "tsc",
+    "script": "tsc && node dist/script.js",
+    "script:dev": "tsx script.ts",
+    "clean": "rm -rf dist"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +19,10 @@
     "cheerio": "^1.0.0",
     "dotenv": "^17.2.1",
     "puppeteer": "^24.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.2.0",
+    "typescript": "^5.9.2",
+    "tsx": "^4.19.2"
   }
 }

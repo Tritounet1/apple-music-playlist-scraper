@@ -6,16 +6,29 @@ import dotenv from 'dotenv'
 
 dotenv.config();
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 const playlistUrl = process.env.PLAYLIST_URL;
 
 if(!playlistUrl) {
-    console.error("Please provide the playlist url.")
-    exit(0);
+    console.error("Please provide the playlist url.");
+    process.exit(0);
 }
 
-async function downloadImage(url, filepath) {
+interface Track {
+  position: number;
+  title: string;
+  titleLink: string;
+  artists: string;
+  artistLinks: string[];
+  album: string;
+  albumLink: string;
+  duration: string;
+  artworkSrc: string | null;
+  isExplicit: boolean;
+}
+
+async function downloadImage(url: string, filepath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     https.get(url, (response) => {
       if (response.statusCode === 200) {
@@ -34,7 +47,7 @@ async function downloadImage(url, filepath) {
   });
 }
 
-async function scrapeAppleMusicPlaylist(numberOfTracks = 5) {
+async function scrapeAppleMusicPlaylist(numberOfTracks: number = 5): Promise<void> {
   const browser = await puppeteer.launch({
     headless: true,
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
@@ -54,7 +67,7 @@ async function scrapeAppleMusicPlaylist(numberOfTracks = 5) {
     const page = await browser.newPage();
     
     console.log('Navigation vers la playlist...');
-    await page.goto(playlistUrl, { waitUntil: 'networkidle2' });
+    await page.goto(playlistUrl!, { waitUntil: 'networkidle2' });
     
     console.log('Attente du chargement du contenu...');
     await sleep(5000);
@@ -66,32 +79,32 @@ async function scrapeAppleMusicPlaylist(numberOfTracks = 5) {
       fs.mkdirSync(imagesDir, { recursive: true });
     }
     
-    const tracks = await page.evaluate((maxTracks) => {
+    const tracks: Track[] = await page.evaluate((maxTracks: number) => {
       const trackItems = document.querySelectorAll('[data-testid="track-list-item"]');
-      const tracksData = [];
+      const tracksData: Track[] = [];
       
       for (let i = 0; i < Math.min(trackItems.length, maxTracks); i++) {
         const track = trackItems[i];
         
         const titleElement = track.querySelector('[data-testid="track-title"]');
-        const title = titleElement ? titleElement.textContent?.trim() : '';
+        const title = titleElement ? titleElement.textContent?.trim() || '' : '';
         
-        const titleLink = titleElement?.closest('a')?.href || '';
+        const titleLink = (titleElement?.closest('a') as HTMLAnchorElement)?.href || '';
         
         const byLineElement = track.querySelector('[data-testid="track-title-by-line"]');
-        const artists = byLineElement ? byLineElement.textContent?.trim() : '';
+        const artists = byLineElement ? byLineElement.textContent?.trim() || '' : '';
         
         const albumElement = track.querySelector('[data-testid="track-column-tertiary"] a');
-        const album = albumElement ? albumElement.textContent?.trim() : '';
-        const albumLink = albumElement ? albumElement.href : '';
+        const album = albumElement ? albumElement.textContent?.trim() || '' : '';
+        const albumLink = (albumElement as HTMLAnchorElement)?.href || '';
         
         const durationElement = track.querySelector('[data-testid="track-duration"]');
-        const duration = durationElement ? durationElement.textContent?.trim() : '';
+        const duration = durationElement ? durationElement.textContent?.trim() || '' : '';
         
         const pictureElement = track.querySelector('[data-testid="artwork-component"] picture');
         let artworkSrc = '';
         if (pictureElement) {
-          const sourceElement = pictureElement.querySelector('source[type="image/webp"]');
+          const sourceElement = pictureElement.querySelector('source[type="image/webp"]') as HTMLSourceElement;
           if (sourceElement && sourceElement.srcset) {
             const srcset = sourceElement.srcset;
             const urls = srcset.split(',').map(s => s.trim().split(' ')[0]);
@@ -102,7 +115,7 @@ async function scrapeAppleMusicPlaylist(numberOfTracks = 5) {
         const explicitBadge = track.querySelector('[data-testid="explicit-badge"]');
         const isExplicit = !!explicitBadge;
         
-        const artistLinks = Array.from(track.querySelectorAll('[data-testid="track-title-by-line"] a')).map(a => a.href);
+        const artistLinks = Array.from(track.querySelectorAll('[data-testid="track-title-by-line"] a')).map(a => (a as HTMLAnchorElement).href);
         
         tracksData.push({
           position: i + 1,
@@ -134,7 +147,7 @@ async function scrapeAppleMusicPlaylist(numberOfTracks = 5) {
           
           track.artworkSrc = `./artwork_images/${filename}`;
         } catch (error) {
-          console.error(`Erreur lors du téléchargement de l'image pour ${track.title}:`, error.message);
+          console.error(`Erreur lors du téléchargement de l'image pour ${track.title}:`, (error as Error).message);
           track.artworkSrc = null;
         }
       }
