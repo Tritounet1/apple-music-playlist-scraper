@@ -5,3 +5,4 @@ playlist_tracks.json
 .env
 artwork_images/
 dist/
+playlist-top5.svg

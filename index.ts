@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import https from 'https';
 import dotenv from 'dotenv'
+import { getArtwork } from './src/utils.js';
 
 dotenv.config();
 
@@ -151,22 +152,28 @@ async function scrapeAppleMusicPlaylist(numberOfTracks: number = 5): Promise<voi
       });
     }
     
-    console.log('Téléchargement des images d\'artwork...');
+    console.log('Récupération des images d\'artwork via l\'API iTunes...');
     for (let i = 0; i < tracks.length; i++) {
       const track = tracks[i];
-      if (track.artworkSrc) {
-        try {
+      try {
+        console.log(`Récupération de l'image ${i + 1}: ${track.title} - ${track.artists}`);
+        const artworkUrl = await getArtwork(track.artists, track.title);
+        
+        if (artworkUrl) {
           const filename = `artwork_${i + 1}_${track.title.replace(/[^a-zA-Z0-9]/g, '_')}.jpg`;
           const localPath = path.join(imagesDir, filename);
           
-          console.log(`Téléchargement de l'image ${i + 1}: ${track.title}`);
-          await downloadImage(track.artworkSrc, localPath);
+          console.log(`Téléchargement de l'image haute qualité pour: ${track.title}`);
+          await downloadImage(artworkUrl, localPath);
           
           track.artworkSrc = `./artwork_images/${filename}`;
-        } catch (error) {
-          console.error(`Erreur lors du téléchargement de l'image pour ${track.title}:`, (error as Error).message);
+        } else {
+          console.log(`Aucune image trouvée pour: ${track.title}`);
           track.artworkSrc = null;
         }
+      } catch (error) {
+        console.error(`Erreur lors de la récupération de l'image pour ${track.title}:`, (error as Error).message);
+        track.artworkSrc = null;
       }
     }
     
