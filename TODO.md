@@ -1,5 +1,2 @@
-- Mettre une image svg dans le README.md a la place du tableau
-- Mettre les images dans un dossier assets
-- Pouvoir choisir ou mettre la section music dans le README (personnalisable)
 - Mettre des gestions d'erreurs (try catch...)
-- Mieux organiser le code, le commenter et rajouter des tests
+- Mieux organiser le code, le commenter et rajouter des tests (changer les noms des fichiers)

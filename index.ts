@@ -139,6 +139,17 @@ async function scrapeAppleMusicPlaylist(numberOfTracks: number = 5): Promise<voi
       
       return tracksData;
     }, numberOfTracks);
+
+    // Supprimer les images du dossier imagesDir
+    if (fs.existsSync(imagesDir)) {
+      const files = fs.readdirSync(imagesDir);
+      files.forEach(file => {
+        if (file.endsWith('.jpg') || file.endsWith('.png') || file.endsWith('.webp')) {
+          fs.unlinkSync(path.join(imagesDir, file));
+          console.log(`Supprimé: ${file}`);
+        }
+      });
+    }
     
     console.log('Téléchargement des images d\'artwork...');
     for (let i = 0; i < tracks.length; i++) {

@@ -1,5 +1,15 @@
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const playlistUrl = process.env.PLAYLIST_URL;
+
+if(!playlistUrl) {
+    console.error("Please provide the playlist url.");
+    process.exit(0);
+}
 
 interface Track {
   position: number;
@@ -52,7 +62,9 @@ function generateMusicSection(tracks: Track[]): string {
         musicSection += `| ${position} | ${artworkMarkdown} | ${titleLinkMarkdown} | ${artists} | ${album} |\n`;
     });
 
-    musicSection += `\n\n---\n\n *Last updated: ${new Date().toLocaleDateString('en-EN', { 
+    musicSection += "\n\n"
+    musicSection += `*Playlist url: ${playlistUrl}*\n\n`
+    musicSection += `*Last updated: ${new Date().toLocaleDateString('en-EN', { 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric' 

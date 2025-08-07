@@ -9,6 +9,8 @@
     "build": "tsc",
     "script": "tsc && node dist/script.js",
     "script:dev": "tsx script.ts",
+    "test": "tsc && node dist/test.js",
+    "test:dev": "tsx test.ts",
     "clean": "rm -rf dist"
   },
   "keywords": [],
